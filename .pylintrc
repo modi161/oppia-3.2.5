@@ -1,0 +1,145 @@
+# To run this, install pylint and use the command:
+#
+#   pylint core --rcfile=.pylintrc -i y
+
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+
+# Checks for correct docstring style
+load-plugins=pylint.extensions.docstyle, pylint_quotes, scripts.linters.pylint_extensions
+
+string-quote=single
+triple-quote=double
+docstring-quote=double
+
+[BASIC]
+
+# Regular expression which should only match correct function names
+function-rgx=^[_a-z][a-z0-9_]*$
+
+# Regular expression which should only match correct method names
+method-rgx=^([_a-z][a-z0-9_]*|__[a-z0-9]+__)$
+
+# Regular expression which should only match correct constant names
+const-rgx=^(([A-Z_][A-Z0-9_]*)|(__.*__)|([a-z_]+_models)|([a-z_]+_services))$
+
+# Good variable names which should always be accepted, separated by a comma
+good-names=e,_,d,f,i,l,p,w,fn,fs,id,pc,sc,zf,setUp,tearDown,longMessage,maxDiff,T
+
+# Regex for dummy variables (to prevent 'unused argument' errors)
+dummy-variables-rgx=_|unused_*
+
+# Regular expression which should match good variable names
+variable-rgx=^(?:|_)[a-z][a-z0-9]*(_[a-z0-9]+)*$
+
+# Regular expression matching correct attribute names
+attr-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Regular expression matching correct argument names
+argument-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Regular expression matching correct module names
+module-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Regular expression which should only match function or class names that do
+# not require a docstring.
+no-docstring-rgx=test_[a-z_]*|[A-Za-z]*Tests|Mock[A-Za-z]*|mock_[a-z_]*|setUp|tearDown|__.*__
+
+[DESIGN]
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=0
+
+# List of builtin function names that should not be used, separated by a comma
+bad-functions=apply,input
+
+[FORMAT]
+
+max-line-length=80
+ignore-long-lines=^.*#\stype:\signore.*$|^\s*(# )?<?https?://\S+>?$
+
+indent-string='    '
+
+allowed-comment-prefixes=int,str,float,bool,v
+forbidden-imports=
+    *core.controllers*:
+        import core.platform*|
+        import core.storage*,
+    *core.domain*:
+        import core.controllers*,
+    *core.storage*:
+        import core.domain*,
+    *core.domain.*_domain:
+        from core.domain* import *_service*|
+        from core.domain* import *_cleaner|
+        from core.domain* import *_registry|
+        from core.domain* import *_fetchers|
+        from core.domain* import *_manager|
+        from core.platform import models
+
+disallowed-functions-and-replacements-str=
+    assertEquals=>self.assertEqual,
+    now=>datetime.datetime.utcnow,
+    beam.CombineValues=>beam.CombinePerKey
+
+disallowed-functions-and-replacements-regex=
+    \.put_async\(=>put,
+    \.put_multi_async\(=>put_multi
+
+[SIMILARITIES]
+
+ignore-imports=yes
+
+[MESSAGES CONTROL]
+
+disable=abstract-method,
+        ungrouped-imports,
+        arguments-differ,
+        broad-except,
+        consider-using-ternary,
+        duplicate-code,
+        fixme,
+        inconsistent-return-statements,
+        len-as-condition,
+        locally-disabled,
+        locally-enabled,
+        logging-not-lazy,
+        multiple-constructor-doc,
+        no-else-return,
+        no-member,
+        no-self-use,
+        not-context-manager,
+        redefined-variable-type,
+        redundant-returns-doc,
+        too-many-arguments,
+        too-many-boolean-expressions,
+        too-many-branches,
+        too-many-instance-attributes,
+        too-many-lines,
+        too-many-locals,
+        too-many-nested-blocks,
+        too-many-public-methods,
+        too-many-statements,
+        wrong-import-order,
+# TODO(#12912): Remove these after the Python 3 migration.
+        arg-name-for-non-keyword-arg,
+        arguments-renamed,
+        consider-using-dict-items,
+        consider-using-with,
+        import-outside-toplevel,
+        non-explicit-keyword-args,
+        not-an-iterable,
+        super-with-arguments,
+        unnecessary-pass,
+        consider-using-f-string,
+# TODO(#14322): Reinstate this.
+        missing-type-doc,
+        # Pylint considers imports to be cyclic even when the cycle is
+        # broken by putting imports inside functions so they aren't
+        # executed upon module import.
+        cyclic-import,
+
+[REPORTS]
+
+# Hide statistics, external dependencies and overall rating.
+reports=no
